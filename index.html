@@ -1,0 +1,82 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label>Name: <input type="text" class="userName"></label><br><br>
+    <label>Email: <input type="email" class="userEmail"></label><br><br>
+    <label>City: <input type="text" class="userCity"></label><br><br>
+    <button>Submit</button><br><br>
+    <label>Delete by Name: <input type="text" class="deleteName"></label>
+    <button class="deleteButton">Delete User</button>
+
+    <div id="userData" style="margin-top: 20px;"></div>
+
+    <script>
+        var myName=document.querySelector(".userName");
+        var myEmail=document.querySelector(".userEmail");
+        var myCity=document.querySelector(".userCity");
+        var button=document.querySelector("button");
+        var deleteName=document.querySelector(".deleteName");
+        var deleteButton=document.querySelector(".deleteButton");
+        var userDataDiv=document.getElementById("userData");
+        var usersList=[];
+
+        button.addEventListener("click",()=>{
+            var obj={
+                name:myName.value,
+                email:myEmail.value,
+                city:myCity.value,
+            };
+            fetch("/contact",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },  
+                body:JSON.stringify(obj)
+            })
+            .then(response=>response.json())
+            .then(data=>{
+                if (data&&data.message==="User data received successfully") {
+                    usersList=data.data;
+                    displayUserData(usersList); 
+                }
+            })  
+            .catch(error=>console.error("Error:",error));
+        });
+
+        deleteButton.addEventListener("click",()=>{
+            var nameToDelete=deleteName.value.trim();
+            if (nameToDelete){
+                fetch(`/delete/${nameToDelete}`, {
+                    method:"DELETE",
+                })
+                .then(response=>response.json())
+                .then(data=>{
+                    if (data&&data.message==="User data deleted successfully") {
+                        usersList=data.data;
+                        displayUserData(usersList);
+                    }
+                })
+                .catch(error=>console.error("Error:",error));
+            }
+        });
+        function displayUserData(users){
+            userDataDiv.innerHTML=`<h3>User Data:</h3>`;
+            if(Array.isArray(users)&&users.length>0){
+                users.forEach(user=>{
+                    userDataDiv.innerHTML+=`
+                        <p><strong>Name:</strong>${user.name}</p>
+                        <p><strong>Email:</strong>${user.email}</p>
+                        <p><strong>City:</strong>${user.city}</p><br>`;
+                });
+            } else{
+                userDataDiv.innerHTML+='<p>No users found.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
