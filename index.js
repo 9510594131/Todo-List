@@ -7,6 +7,12 @@ app.use(cors());
 
 const users=[];
 
+app.use(cors({
+    origin: 'https://todo-list-eight-peach.vercel.app/',
+    methods: ['GET', 'POST','DELETE'],
+    credentials: true
+  }))
+
 app.listen(PORT,()=>console.log(`http://localhost:${PORT}`));
 
 app.get("/home",(req,res)=>{
