@@ -1,7 +1,9 @@
 var express=require("express");
+const cors = require('cors');
 var app=express();
 const PORT=3000;
 app.use(express.json());
+app.use(cors());
 
 const users=[];
 
@@ -13,7 +15,7 @@ app.get("/home",(req,res)=>{
 
 app.post("/contact",(req,res)=>{
     const userData=req.body;
-    console.log("Received user data:",userData);
+    console.log("Received user data:",userData); 
     users.push(userData);
     res.json({
         message:"User data received successfully",
