@@ -1,4 +1,4 @@
-<!DOCTYPE html>   
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,7 @@
         var userDataDiv = document.getElementById("userData");
         var usersList = [];
 
-        const backendURL = "https://your-backend-url.vercel.app";
+        const backendURL = "https://your-backend-url.vercel.app"; // Replace with your actual backend URL
 
         submitButton.addEventListener("click", () => {
             var obj = {
@@ -47,13 +47,17 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log("Backend Response:", data);
+                console.log("Backend Response:", data); // Log the backend response for debugging
                 if (data && data.message === "User data received successfully") {
                     usersList = data.data;
-                    displayUserData(usersList); 
+                    displayUserData(usersList);
+                } else {
+                    console.error("Error in backend response:", data);
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+            });
         });
 
         deleteButton.addEventListener("click", () => {
