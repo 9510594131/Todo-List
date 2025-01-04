@@ -6,6 +6,8 @@
     <title>User Management</title>
 </head>
 <body>
+    <h1>User Management</h1>
+    
     <label>Name: <input type="text" class="userName"></label><br><br>
     <label>Email: <input type="email" class="userEmail"></label><br><br>
     <label>City: <input type="text" class="userCity"></label><br><br>
@@ -26,6 +28,8 @@
         var userDataDiv = document.getElementById("userData");
         var usersList = [];
 
+        const backendURL = "https://your-backend-url.vercel.app";
+
         submitButton.addEventListener("click", () => {
             var obj = {
                 name: myName.value,
@@ -33,7 +37,7 @@
                 city: myCity.value,
             };
 
-            fetch("http://localhost:3000/contact", {
+            fetch(`${backendURL}/contact`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -54,7 +58,7 @@
         deleteButton.addEventListener("click", () => {
             var nameToDelete = deleteName.value.trim();
             if (nameToDelete) {
-                fetch(`http://localhost:3000/delete/${nameToDelete}`, {
+                fetch(`${backendURL}/delete/${nameToDelete}`, {
                     method: "DELETE",
                 })
                 .then(response => response.json())
