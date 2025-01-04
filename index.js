@@ -1,46 +1,51 @@
-var express=require("express");
-const cors = require('cors');
-var app=express();
-const PORT=3000;
-app.use(express.json());
-app.use(cors());
+const express = require("express");
+const cors = require("cors");
 
-const users=[];
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+const users = [];
 
 app.use(cors({
-    origin: 'https://todo-list-eight-peach.vercel.app/',
-    methods: ['GET', 'POST','DELETE'],
+    origin: 'http://yourfrontend.vercel.app', 
+    methods: ['GET', 'POST', 'DELETE'],
     credentials: true
-  }))
+}));
 
-app.listen(PORT,()=>console.log(`http://localhost:${PORT}`));
+app.use(express.static(__dirname));
 
-app.get("/home",(req,res)=>{
-    res.sendFile("index.html",{ root: __dirname });
-});
+app.post("/contact", (req, res) => {
+    const userData = req.body;
+    console.log("Received user data:", userData);
 
-app.post("/contact",(req,res)=>{
-    const userData=req.body;
-    console.log("Received user data:",userData); 
     users.push(userData);
+
     res.json({
-        message:"User data received successfully",
-        data:users
+        message: "User data received successfully",
+        data: users
     });
 });
 
-app.delete("/delete/:name",(req,res)=>{
-    const nameToDelete=req.params.name;
-    const index=users.findIndex(user=>user.name.toLowerCase()===nameToDelete.toLowerCase());
+app.delete("/delete/:name", (req, res) => {
+    const nameToDelete = req.params.name;
+    const index = users.findIndex(user => user.name.toLowerCase() === nameToDelete.toLowerCase());
 
-    if(index!==-1){
-        users.splice(index,1);
-        
+    console.log(`Trying to delete user: ${nameToDelete}`);
+
+    if (index !== -1) {
+        users.splice(index, 1);
+        console.log("Users Array after deletion:", users);
+
         res.json({
-            message:"User data deleted successfully",
-            data:users
+            message: "User data deleted successfully",
+            data: users
         });
-    } else{
+    } else {
         res.status(404).json({ message: "User not found" });
     }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
