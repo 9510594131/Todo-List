@@ -8,10 +8,12 @@
 <body>
     <h1>User Management</h1>
     
-    <label>Name: <input type="text" class="userName"></label><br><br>
-    <label>Email: <input type="email" class="userEmail"></label><br><br>
-    <label>City: <input type="text" class="userCity"></label><br><br>
-    <button>Submit</button><br><br>
+    <form id="userForm">
+        <label>Name: <input type="text" class="userName"></label><br><br>
+        <label>Email: <input type="email" class="userEmail"></label><br><br>
+        <label>City: <input type="text" class="userCity"></label><br><br>
+        <button type="submit">Submit</button><br><br>
+    </form>
 
     <label>Delete by Name: <input type="text" class="deleteName"></label>
     <button class="deleteButton">Delete User</button>
@@ -22,15 +24,17 @@
         var myName = document.querySelector(".userName");
         var myEmail = document.querySelector(".userEmail");
         var myCity = document.querySelector(".userCity");
-        var submitButton = document.querySelector("button");
+        var submitButton = document.querySelector("button[type='submit']");
         var deleteName = document.querySelector(".deleteName");
         var deleteButton = document.querySelector(".deleteButton");
         var userDataDiv = document.getElementById("userData");
         var usersList = [];
 
-        const backendURL = "https://your-backend-url.vercel.app"; // Replace with your actual backend URL
+        const backendURL = "http://localhost:8080"; // Use localhost for local testing
 
-        submitButton.addEventListener("click", () => {
+        document.getElementById("userForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+
             var obj = {
                 name: myName.value,
                 email: myEmail.value,
@@ -47,7 +51,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log("Backend Response:", data); // Log the backend response for debugging
+                console.log("Backend Response:", data);
                 if (data && data.message === "User data received successfully") {
                     usersList = data.data;
                     displayUserData(usersList);
